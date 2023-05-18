@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collection;
 
 @Getter
 @Setter
@@ -71,29 +70,28 @@ public class GameLogic extends UniversalAdapter{
         if (this.isTreeButtonActive()) {
             int actualX = e.getX();
             int actualY = e.getY();
-            System.out.println("MouseDragged X = " + actualX + " Y = " + actualY );
             Tree actualTree = this.getBoard().getActualTree();
             int width = Math.abs(actualTree.getX()-actualX);
             int height = Math.abs(actualTree.getY()-actualY);
             actualTree.setWidth(width);
             actualTree.setHeight(height);
-            this.getBoard().revalidate();
-            this.getBoard().repaint();
         }
         if (isMoveButtonActive() && this.getBoard().getActualTree()!=null) {
-            System.out.println("Drzim");
-            this.getBoard().getActualTree().setX(e.getX());
-            this.getBoard().getActualTree().setY(e.getY());
-            this.getBoard().revalidate();
-            this.getBoard().repaint();
+            int delta = -(this.getBoard().getCursorStartX()-e.getX());
+            int deltaY = -(this.getBoard().getCursorStartY()-e.getY());
+            this.getBoard().getActualTree().setX(this.getBoard().getActualTree().getX()+delta);
+            this.getBoard().getActualTree().setY(this.getBoard().getActualTree().getY()+deltaY);
+            this.getBoard().setCursorStartX(e.getX());
+            this.getBoard().setCursorStartY(e.getY());
         }
-     }
+        this.getBoard().revalidate();
+        this.getBoard().repaint();
+    }
 
 
 
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println("MousePressed");
         if (isTreeButtonActive()) {
             int startX = e.getX();
             int startY = e.getY();
@@ -105,13 +103,9 @@ public class GameLogic extends UniversalAdapter{
         if (isMoveButtonActive()) {
             for (Tree tree : this.getBoard().getTrees()) {
                 if (tree.contains(e.getX(),e.getY())) {
-                    System.out.println(tree);
                     this.getBoard().setActualTree(tree);
-                    System.out.println("Som v strome");
-                } else {
-                    System.out.println("Som tu");
-                    this.getBoard().setActualTree(null);
-                    System.out.println("Not working");
+                    this.getBoard().setCursorStartX(e.getX());
+                    this.getBoard().setCursorStartY(e.getY());
                 }
             }
         }
@@ -119,7 +113,9 @@ public class GameLogic extends UniversalAdapter{
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        System.out.println("MouseReleased");
+        if (isMoveButtonActive()) {
+            this.getBoard().setActualTree(null);
+        }
         if (isTreeButtonActive()) {
             Tree actualTree = this.getBoard().getActualTree();
             if (actualTree.getX() > e.getX()) {
@@ -142,13 +138,10 @@ public class GameLogic extends UniversalAdapter{
             if (((JButton)source).getText().equals(TREE_BUTTON_NAME)) {
                 setTreeButtonActive(true);
                 setMoveButtonActive(false);
-                System.out.println("SASA");
-                updateStatusLabel("Tree");
             }
             if (((JButton)source).getText().equals(MOVE_BUTTON_NAME)) {
                 setMoveButtonActive(true);
                 setTreeButtonActive(false);
-                updateStatusLabel("Move");
             }
             if (((JButton)source).getText().equals(COLOR_BUTTON_NAME)) {
                 int actualColorIndex = this.getColors().indexOf(getActualColor());
@@ -157,7 +150,6 @@ public class GameLogic extends UniversalAdapter{
                 } else {
                     actualColor = this.getColors().get(0);
                 }
-                System.out.println("Color");
                 this.updateStatusLabelBackground();
             }
         }

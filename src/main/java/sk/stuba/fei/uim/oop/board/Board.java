@@ -13,6 +13,8 @@ import java.util.ArrayList;
 public class Board extends JPanel {
     ArrayList<Tree> trees;
     Tree actualTree;
+    int cursorStartX;
+    int cursorStartY;
 
     public Board() {
         setBackground(Color.cyan);
@@ -24,6 +26,9 @@ public class Board extends JPanel {
         super.paintComponent(g);
         for(Tree tree : trees) {
             tree.drawTree(g);
+        }
+        if (actualTree != null) {
+            actualTree.drawTree(g);
         }
     }
 }
