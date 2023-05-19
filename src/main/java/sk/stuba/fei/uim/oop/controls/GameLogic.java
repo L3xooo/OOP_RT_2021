@@ -71,10 +71,26 @@ public class GameLogic extends UniversalAdapter{
             int actualX = e.getX();
             int actualY = e.getY();
             Tree actualTree = this.getBoard().getActualTree();
-            int width = Math.abs(actualTree.getX()-actualX);
-            int height = Math.abs(actualTree.getY()-actualY);
-            actualTree.setWidth(width);
-            actualTree.setHeight(height);
+            if (actualX > this.getBoard().getCursorStartX() && actualY > this.getBoard().getCursorStartY()) {
+                actualTree.setWidth(Math.abs(actualTree.getX() - actualX));
+                actualTree.setHeight(Math.abs(actualTree.getY() - actualY));
+            }
+            if (actualX < this.getBoard().getCursorStartX() && actualY > this.getBoard().getCursorStartY()) {
+                actualTree.setX(actualX);
+                actualTree.setWidth(Math.abs(actualX - this.getBoard().getCursorStartX()));
+                actualTree.setHeight(Math.abs(actualTree.getY() - actualY));
+            }
+            if (actualX > this.getBoard().getCursorStartX() && actualY < this.getBoard().getCursorStartY()) {
+                actualTree.setY(actualY);
+                actualTree.setWidth(Math.abs(actualTree.getX() - actualX));
+                actualTree.setHeight(Math.abs(actualY - this.getBoard().getCursorStartY()));
+            }
+            if (actualX < this.getBoard().getCursorStartX() && actualY < this.getBoard().getCursorStartY()) {
+                actualTree.setX(actualX);
+                actualTree.setY(actualY);
+                actualTree.setWidth(Math.abs(actualX - this.getBoard().getCursorStartX()));
+                actualTree.setHeight(Math.abs(actualY - this.getBoard().getCursorStartY()));
+            }
         }
         if (isMoveButtonActive() && this.getBoard().getActualTree()!=null) {
             int delta = -(this.getBoard().getCursorStartX()-e.getX());
@@ -99,6 +115,8 @@ public class GameLogic extends UniversalAdapter{
             this.getBoard().setActualTree(actualTree);
             this.getBoard().revalidate();
             this.getBoard().repaint();
+            this.getBoard().setCursorStartX(e.getX());
+            this.getBoard().setCursorStartY(e.getY());
         }
         if (isMoveButtonActive()) {
             for (Tree tree : this.getBoard().getTrees()) {
@@ -136,10 +154,12 @@ public class GameLogic extends UniversalAdapter{
         Object source = e.getSource();
         if(source instanceof JButton) {
             if (((JButton)source).getText().equals(TREE_BUTTON_NAME)) {
+                updateStatusLabel("Tree");
                 setTreeButtonActive(true);
                 setMoveButtonActive(false);
             }
             if (((JButton)source).getText().equals(MOVE_BUTTON_NAME)) {
+                updateStatusLabel("Move");
                 setMoveButtonActive(true);
                 setTreeButtonActive(false);
             }
