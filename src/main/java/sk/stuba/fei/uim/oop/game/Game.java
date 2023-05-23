@@ -13,15 +13,17 @@ public class Game {
         frame.setSize(500,500);
         frame.setResizable(false);
 
-        GameLogic logic = new GameLogic(frame);
-
+        GameLogic logic = new GameLogic();
 
         JButton treeButton = new JButton("Tree");
         treeButton.addActionListener(logic);
+        treeButton.setFocusable(false);
         JButton moveButton = new JButton("Move");
         moveButton.addActionListener(logic);
+        moveButton.setFocusable(false);
         JButton nextColorButton = new JButton("Next Color");
         nextColorButton.addActionListener(logic);
+        nextColorButton.setFocusable(false);
 
         JPanel gameMenu = new JPanel();
         gameMenu.setBackground(Color.lightGray);
@@ -31,7 +33,9 @@ public class Game {
         gameMenu.add(nextColorButton);
         gameMenu.add(logic.getStatusLabel());
 
+        frame.add(logic.getBoard());
         frame.add(gameMenu,BorderLayout.SOUTH);
+        frame.setFocusable(true);
         frame.setVisible(true);
     }
 }

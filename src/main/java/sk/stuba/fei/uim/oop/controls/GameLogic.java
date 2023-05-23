@@ -1,5 +1,4 @@
 package sk.stuba.fei.uim.oop.controls;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import sk.stuba.fei.uim.oop.board.Board;
@@ -18,20 +17,17 @@ public class GameLogic extends UniversalAdapter{
     private static final String TREE_BUTTON_NAME = "Tree";
     private static final String COLOR_BUTTON_NAME = "Next Color";
     private JLabel statusLabel;
-    private JFrame frame;
     private Board board;
     private Color actualColor;
     private ArrayList<Color> colors;
     private boolean moveButtonActive;
     private boolean treeButtonActive;
 
-    public GameLogic(JFrame frame){
+    public GameLogic(){
         this.moveButtonActive = false;
         this.treeButtonActive = false;
-        this.frame = frame;
         initBoard();
         this.initColors();
-        this.frame.add(board);
         this.statusLabel = new JLabel();
         this.statusLabel.setOpaque(true);
         updateStatusLabel("");

@@ -27,7 +27,7 @@ public class Tree implements Shape{
     }
     public void drawTree(Graphics g){
         g.setColor(this.color);
-        g.fillOval(x,y,width,height/3*2);
+        g.fillOval(x,y,width, (height/3*2));
         g.fillRect(x+(width/3),y-10+(height/3)*2,width/3,height/3+10);
     }
 
@@ -43,10 +43,6 @@ public class Tree implements Shape{
 
     @Override
     public boolean contains(double x, double y) {
-        System.out.println(x);
-        System.out.println(y);
-        System.out.println(this.getX()+width);
-        System.out.println(this.getY()+height);
         if ((this.getX() < x && x < this.getX()+this.getWidth()) && (this.getY() < y && y < this.getY()+this.getHeight())) {
             return true;
         }
